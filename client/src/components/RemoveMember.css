@@ -1,0 +1,34 @@
+.remove-member-page form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .remove-member-page form div {
+    margin-bottom: 10px;
+  }
+  
+  .remove-member-page form label {
+    margin-right: 10px;
+  }
+  
+  .remove-member-page form input[type="text"] {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+  }
+  
+  .remove-member-page form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
+  .remove-member-page form button:hover {
+    background-color: #45a049;
+  }
+  

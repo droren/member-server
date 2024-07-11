@@ -1,0 +1,35 @@
+.login-page form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-page form div {
+    margin-bottom: 10px;
+  }
+  
+  .login-page form label {
+    margin-right: 10px;
+  }
+  
+  .login-page form input[type="text"],
+  .login-page form input[type="password"] {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+  }
+  
+  .login-page form button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
+  .login-page form button:hover {
+    background-color: #45a049;
+  }
+  

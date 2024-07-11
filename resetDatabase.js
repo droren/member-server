@@ -10,7 +10,7 @@ const resetDatabase = async () => {
     await User.deleteMany({});
     await Member.deleteMany({});
 
-    const defaultUsername = 'göranadmin';
+    const defaultUsername = 'MongoDB';
     const defaultPassword = 'skogsrojet2012';
 
     const hashedPassword = await bcrypt.hash(defaultPassword, 10);

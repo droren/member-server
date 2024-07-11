@@ -1,0 +1,15 @@
+/* Example styles */
+body {
+    font-family: Arial, sans-serif;
+    background: url('https://www.transparenttextures.com/patterns/snail-shell.png');
+    color: #333;
+  }
+  
+  .app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Add more styles as needed */
+  

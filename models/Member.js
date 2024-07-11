@@ -5,7 +5,7 @@ const memberSchema = new mongoose.Schema({
   birthday: { type: Date, required: true },
   contactInfo: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  memberNumber: { type: String, unique: true },
+  memberNumber: { type: Number, unique: true },
   group: { type: String },
   feePaid: { type: Boolean, default: false },
   removed: { type: Boolean, default: false },

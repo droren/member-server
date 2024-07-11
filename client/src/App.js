@@ -7,6 +7,7 @@ import MemberList from './components/MemberList';
 import AddMember from './components/AddMember';
 import RemoveMember from './components/RemoveMember';
 import PrintMembers from './components/PrintMembers';
+import EditMember from './components/EditMember'; // Import the new component
 import './App.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/add-member" element={<AddMember />} />
           <Route path="/remove-member" element={<RemoveMember />} />
           <Route path="/print-members" element={<PrintMembers />} />
+          <Route path="/edit-member/:id" element={<EditMember />} /> {/* Add the new route */}
         </Routes>
       </div>
     </Router>
