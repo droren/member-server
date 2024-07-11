@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import './AddMember.css';
 
 const AddMember = () => {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [contactInfo, setContactInfo] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [postalNumber, setPostalNumber] = useState('');
+  const [city, setCity] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [group, setGroup] = useState('');
   const [feePaid, setFeePaid] = useState(false);
@@ -17,9 +20,12 @@ const AddMember = () => {
     const token = localStorage.getItem('token');
     try {
       await axios.post('http://localhost:5500/members', {
-        name,
+        firstName,
+        lastName,
         birthday,
-        contactInfo,
+        streetAddress,
+        postalNumber,
+        city,
         phoneNumber,
         group,
         feePaid
@@ -36,32 +42,46 @@ const AddMember = () => {
   return (
     <div className="add-member-page">
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        <div className="form-group">
+          <label>First Name</label>
+          <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
         </div>
-        <div>
+        <div className="form-group">
+          <label>Last Name</label>
+          <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+        </div>
+        <div className="form-group">
           <label>Birthday</label>
           <input type="date" value={birthday} onChange={(e) => setBirthday(e.target.value)} required />
         </div>
-        <div>
-          <label>Contact Information</label>
-          <input type="text" value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} required />
+        <div className="form-group">
+          <label>Street Address</label>
+          <input type="text" value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required />
         </div>
-        <div>
+        <div className="form-group">
+          <label>Postal Number</label>
+          <input type="text" value={postalNumber} onChange={(e) => setPostalNumber(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>City</label>
+          <input type="text" value={city} onChange={(e) => setCity(e.target.value)} required />
+        </div>
+        <div className="form-group">
           <label>Phone Number</label>
           <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} required />
         </div>
-        <div>
+        <div className="form-group">
           <label>Group</label>
           <input type="text" value={group} onChange={(e) => setGroup(e.target.value)} />
         </div>
-        <div>
+        <div className="form-group">
           <label>Fee Paid</label>
           <input type="checkbox" checked={feePaid} onChange={(e) => setFeePaid(e.target.checked)} />
         </div>
-        <button type="submit">Add Member</button>
-        <button type="button" onClick={() => navigate('/members')}>Cancel</button>
+        <div className="form-actions">
+          <button type="submit">Add Member</button>
+          <button type="button" onClick={() => navigate('/members')}>Cancel</button>
+        </div>
       </form>
     </div>
   );

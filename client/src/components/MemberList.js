@@ -36,7 +36,8 @@ const MemberList = () => {
         <h1>Member List</h1>
         <div className="member-info header">
           <span className="member-number">Member Number</span>
-          <span className="member-name">Name</span>
+          <span className="member-name">First Name</span>
+          <span className="member-name">Last Name</span>
           <span className="member-phone">Phone Number</span>
           <span className="member-fee">Fee Status</span>
           <span className="member-edit">Edit</span>
@@ -46,7 +47,8 @@ const MemberList = () => {
             <li key={member._id} className={member.removed ? 'removed' : ''}>
               <div className="member-info">
                 <span className="member-number">{String(member.memberNumber).padStart(5, '0')}</span>
-                <span className="member-name">{member.name}</span>
+                <span className="member-name">{member.firstName}</span>
+                <span className="member-name">{member.lastName}</span>
                 <span className="member-phone">{member.phoneNumber}</span>
                 <span className="member-fee">{member.feePaid ? 'Paid' : 'Unpaid'}</span>
                 <Link to={`/edit-member/${member._id}`} className="edit-link">Edit</Link>

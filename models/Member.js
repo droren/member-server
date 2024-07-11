@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 
 const memberSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   birthday: { type: Date, required: true },
-  contactInfo: { type: String, required: true },
+  streetAddress: { type: String, required: true },
+  postalNumber: { type: String, required: true },
+  city: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   memberNumber: { type: Number, unique: true },
   group: { type: String },
   feePaid: { type: Boolean, default: false },
+  paymentDate: { type: Date },
   removed: { type: Boolean, default: false },
   removalReason: { type: String, default: '' }
 });

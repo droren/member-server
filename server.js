@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const schedule = require('node-schedule');
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -32,6 +33,21 @@ const generateMemberNumber = async () => {
   const nextMemberNumber = lastMember ? lastMember.memberNumber + 1 : 1;
   return nextMemberNumber;
 };
+
+// Schedule a daily job to check and update member payment status
+schedule.scheduleJob('0 0 * * *', async () => {
+  const members = await Member.find({ feePaid: true });
+  const today = new Date();
+  members.forEach(async (member) => {
+    const paymentDate = new Date(member.paymentDate);
+    const oneYearLater = new Date(paymentDate.setFullYear(paymentDate.getFullYear() + 1));
+    if (today >= oneYearLater) {
+      member.feePaid = false;
+      member.paymentDate = null;
+      await member.save();
+    }
+  });
+});
 
 // Register User (for testing, not used in production)
 app.post('/register', async (req, res) => {
@@ -74,9 +90,10 @@ const authenticateToken = (req, res, next) => {
 
 // Member Routes
 app.post('/members', authenticateToken, async (req, res) => {
-  const { name, birthday, contactInfo, phoneNumber, group, feePaid } = req.body;
+  const { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid } = req.body;
   const memberNumber = await generateMemberNumber();
-  const newMember = new Member({ name, birthday, contactInfo, phoneNumber, memberNumber, group, feePaid });
+  const paymentDate = feePaid ? new Date() : null;
+  const newMember = new Member({ firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, memberNumber, group, feePaid, paymentDate });
   try {
     await newMember.save();
     res.status(201).json(newMember);
@@ -90,23 +107,23 @@ app.get('/members', authenticateToken, async (req, res) => {
   res.json(members);
 });
 
-app.put('/members/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
-  try {
-    const updatedMember = await Member.findByIdAndUpdate(id, updates, { new: true });
-    res.json(updatedMember);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-// Get single member by ID
 app.get('/members/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   try {
     const member = await Member.findById(id);
     res.json(member);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.put('/members/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid } = req.body;
+  const paymentDate = feePaid ? new Date() : null;
+  try {
+    const updatedMember = await Member.findByIdAndUpdate(id, { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid, paymentDate }, { new: true });
+    res.json(updatedMember);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
