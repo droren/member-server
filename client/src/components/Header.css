@@ -1,0 +1,20 @@
+.header {
+    width: 95%;
+    text-align: center;
+    background-color: #333;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .header h1 {
+    font-family: 'Rock Salt'; /* Ensure to include this font in your index.html or load it from Google Fonts */
+    color: #4CAF50;
+    margin: 0;
+  }
+
+  .header h2 {
+    font-family: 'Rock Salt'; /* Ensure to include this font in your index.html or load it from Google Fonts */
+    color: #4CAF50;
+    margin: 0;
+  }
+  

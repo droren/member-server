@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './AddMember.css';
 
 const AddMember = () => {
@@ -41,6 +42,7 @@ const AddMember = () => {
 
   return (
     <div className="add-member-page">
+      <Header /> {/* Include the Header component */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>First Name</label>
@@ -83,6 +85,12 @@ const AddMember = () => {
           <button type="button" onClick={() => navigate('/members')}>Cancel</button>
         </div>
       </form>
+      <div className="gdpr-note">
+        <p>
+          By submitting this form, you agree to the storage and handling of your data in accordance with GDPR regulations.
+        </p>
+        <button onClick={() => navigate('/gdpr')}>GDPR Information</button>
+      </div>
     </div>
   );
 };

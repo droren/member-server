@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './EditMember.css';
 
 const EditMember = () => {
@@ -63,6 +64,7 @@ const EditMember = () => {
 
   return (
     <div className="edit-member-page">
+      <Header /> {/* Include the Header component */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>First Name</label>

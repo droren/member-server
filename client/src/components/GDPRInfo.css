@@ -1,0 +1,33 @@
+.gdpr-info-page {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .gdpr-info-page h1 {
+    margin-bottom: 20px;
+  }
+  
+  .gdpr-info-page p {
+    margin-bottom: 10px;
+  }
+  
+  .gdpr-info-page h2 {
+    margin-top: 20px;
+  }
+  
+  .gdpr-info-page button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .gdpr-info-page button:hover {
+    background-color: #45a049;
+  }
+  

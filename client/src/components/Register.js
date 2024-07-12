@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './Login.css';
 
 const Login = () => {
@@ -22,6 +23,7 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <Header /> {/* Include the Header component */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Username</label>

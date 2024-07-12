@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Header from './Header';  // Import the Header component
 import './PrintMembers.css';
 
 const PrintMembers = () => {
@@ -17,15 +18,23 @@ const PrintMembers = () => {
     fetchMembers();
   }, []);
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <div className="printable-member-list">
-      <h1>Printable Member List</h1>
+      <Header /> {/* Include the Header component */}
       <div className="member-info header">
         <span className="member-number">Member Number</span>
         <span className="member-name">First Name</span>
         <span className="member-name">Last Name</span>
+        <span className="member-birthday">Birthday</span>
         <span className="member-phone">Phone Number</span>
-        <span className="member-fee">Fee Status</span>
       </div>
       <ul>
         {members.map(member => (
@@ -34,8 +43,8 @@ const PrintMembers = () => {
               <span className="member-number">{String(member.memberNumber).padStart(5, '0')}</span>
               <span className="member-name">{member.firstName}</span>
               <span className="member-name">{member.lastName}</span>
+              <span className="member-birthday">{formatDate(member.birthday)}</span>
               <span className="member-phone">{member.phoneNumber}</span>
-              <span className="member-fee">{member.feePaid ? 'Paid' : 'Unpaid'}</span>
             </div>
           </li>
         ))}

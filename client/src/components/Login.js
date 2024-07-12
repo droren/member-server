@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './styles.css'; // Ensure this import is correct
 
 const Login = () => {
@@ -22,6 +23,7 @@ const Login = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Header /> {/* Include the Header component */}
       <div>
         <label>Username</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />

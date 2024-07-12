@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './MemberList.css';
 
 const MemberList = () => {
@@ -33,13 +34,14 @@ const MemberList = () => {
         <button onClick={handleLogout}>Exit</button>
       </div>
       <div className="main-content">
+        <Header /> {/* Include the Header component */}
         <h1>Member List</h1>
         <div className="member-info header">
-          <span className="member-number">Member Number</span>
-          <span className="member-name">First Name</span>
-          <span className="member-name">Last Name</span>
-          <span className="member-phone">Phone Number</span>
-          <span className="member-fee">Fee Status</span>
+          <span className="member-number">Medlemsnr</span>
+          <span className="member-name">Förnamn</span>
+          <span className="member-name">Efternamn</span>
+          <span className="member-phone">Telefonnummer</span>
+          <span className="member-fee">Aktiv</span>
           <span className="member-edit">Edit</span>
         </div>
         <ul>

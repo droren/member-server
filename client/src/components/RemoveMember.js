@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';  // Import the Header component
 import './RemoveMember.css';
 
 const RemoveMember = () => {
@@ -35,6 +36,7 @@ const RemoveMember = () => {
 
   return (
     <div className="remove-member-page">
+      <Header /> {/* Include the Header component */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Member Number</label>
