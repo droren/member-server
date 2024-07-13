@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
+const User = require('./models/User').default;
 const Member = require('./models/Member');
 
 mongoose.connect('mongodb://localhost:27017/memberDB', {

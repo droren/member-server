@@ -1,144 +1,118 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const schedule = require('node-schedule');
+const User = require('./models/User');
+const Member = require('./models/Member');
+const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 5500;
+const port = 5500;
+const jwtSecret = process.env.JWT_SECRET || 'yourJWTSecret';
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-mongoose.set('strictQuery', false);
+const mongoDBServerIP = process.env.MONGODB_SERVER_IP || 'localhost';
+const mongoDBDatabase = process.env.MONGODB_DATABASE || 'yourDatabase';
 
-mongoose.connect('mongodb://localhost:27017/memberDB', {
+mongoose.connect(`mongodb://${mongoDBServerIP}:27017/${mongoDBDatabase}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000,
-}).then(() => {
-  console.log('MongoDB connected');
-}).catch(err => {
-  console.error('Error connecting to MongoDB:', err);
+  useUnifiedTopology: true
 });
 
-const Member = require('./models/Member');
-const User = require('./models/User');
-
-const secret = 'your_jwt_secret'; // Use a more secure secret in production
-
-const generateMemberNumber = async () => {
-  const lastMember = await Member.findOne().sort({ memberNumber: -1 }).exec();
-  const nextMemberNumber = lastMember ? lastMember.memberNumber + 1 : 1;
-  return nextMemberNumber;
-};
-
-// Schedule a daily job to check and update member payment status
-schedule.scheduleJob('0 0 * * *', async () => {
-  const members = await Member.find({ feePaid: true });
-  const today = new Date();
-  members.forEach(async (member) => {
-    const paymentDate = new Date(member.paymentDate);
-    const oneYearLater = new Date(paymentDate.setFullYear(paymentDate.getFullYear() + 1));
-    if (today >= oneYearLater) {
-      member.feePaid = false;
-      member.paymentDate = null;
-      await member.save();
-    }
-  });
-});
-
-// Register User (for testing, not used in production)
+// Register user endpoint
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({ username, password: hashedPassword });
   try {
-    await newUser.save();
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword });
+    await user.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
-    res.status(400).json({ error: 'Username already exists' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Login User
+// Login endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
-  if (user && await bcrypt.compare(password, user.password)) {
-    const token = jwt.sign({ id: user._id, username: user.username }, secret, { expiresIn: '1h' });
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
     res.json({ token });
-  } else {
-    res.status(400).json({ error: 'Invalid credentials' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Middleware to protect routes
-const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Access denied' });
+// Fetch members endpoint
+app.get('/members', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
   try {
-    const verified = jwt.verify(token, secret);
-    req.user = verified;
-    next();
+    const decoded = jwt.verify(token, jwtSecret);
+    const members = await Member.find({ removed: { $ne: true } });
+    res.json(members);
   } catch (err) {
-    res.status(400).json({ error: 'Invalid token' });
+    res.status(500).json({ message: 'Server error' });
   }
-};
+});
 
-// Member Routes
-app.post('/members', authenticateToken, async (req, res) => {
-  const { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid } = req.body;
-  const memberNumber = await generateMemberNumber();
-  const paymentDate = feePaid ? new Date() : null;
-  const newMember = new Member({ firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, memberNumber, group, feePaid, paymentDate });
+// Add member endpoint
+app.post('/members', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
   try {
-    await newMember.save();
-    res.status(201).json(newMember);
+    const decoded = jwt.verify(token, jwtSecret);
+    const member = new Member(req.body);
+    await member.save();
+    res.status(201).json(member);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-app.get('/members', authenticateToken, async (req, res) => {
-  const members = await Member.find();
-  res.json(members);
-});
+// Remove member endpoint
+app.delete('/members', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
-app.get('/members/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
   try {
-    const member = await Member.findById(id);
-    res.json(member);
+    const decoded = jwt.verify(token, jwtSecret);
+    const { memberNumber, reason } = req.body;
+    const member = await Member.findOneAndUpdate(
+      { memberNumber },
+      { removed: true, removalReason: reason },
+      { new: true }
+    );
+    if (!member) {
+      return res.status(404).json({ message: 'Member not found' });
+    }
+    res.json({ message: 'Member marked as removed', member });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-app.put('/members/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid } = req.body;
-  const paymentDate = feePaid ? new Date() : null;
-  try {
-    const updatedMember = await Member.findByIdAndUpdate(id, { firstName, lastName, birthday, streetAddress, postalNumber, city, phoneNumber, group, feePaid, paymentDate }, { new: true });
-    res.json(updatedMember);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-app.delete('/members/:id', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  try {
-    await Member.findByIdAndDelete(id);
-    res.json({ message: 'Member deleted' });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on port ${port}`);
 });
