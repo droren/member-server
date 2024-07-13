@@ -3,7 +3,10 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/User');
 const Member = require('./models/Member');
 
-mongoose.connect('mongodb://localhost:27017/memberDB', {});
+mongoose.connect('mongodb://localhost:27017/memberDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true  
+});
 
 const resetDatabase = async () => {
   try {

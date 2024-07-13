@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5500/login', { username, password });
+      const response = await axios.post('http://192.168.1.227:5500/login', { username, password });
       localStorage.setItem('token', response.data.token);
       navigate('/members');
     } catch (err) {
