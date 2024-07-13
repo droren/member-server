@@ -13,7 +13,7 @@ app.use(express.json());
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect('mongodb://MongoDB:skogsrojet2012@localhost:27017/memberDB', {
+mongoose.connect('mongodb://localhost:27017/memberDB', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000,
