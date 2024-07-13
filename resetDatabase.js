@@ -11,7 +11,9 @@ const mongoDBDatabase = process.env.MONGODB_DATABASE || 'yourDatabase';
 
 mongoose.connect(`mongodb://${mongoDBServerIP}:27017/${mongoDBDatabase}`, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true, // Suppresses ensureIndex deprecation warning
+  useFindAndModify: false // Suppresses findOneAndUpdate and findOneAndDelete deprecation warning
 });
 
 mongoose.connection.on('connected', async () => {
@@ -19,9 +21,6 @@ mongoose.connection.on('connected', async () => {
     // Clear existing data
     await User.deleteMany({});
     await Member.deleteMany({});
-
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash('skogsrojet2012', saltRounds);
 
     // Add default admin user
     const adminUser = new User({

@@ -4,7 +4,8 @@
     "main": "server.js",
     "scripts": {
       "start": "node server.js",
-      "reset-db": "node resetDatabase.js"
+      "reset-db": "node resetDatabase.js",
+      "reset-admin": "node resetAdminUser.js"
     },
     "dependencies": {
       "bcrypt": "^5.0.1",

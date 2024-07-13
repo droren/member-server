@@ -16,6 +16,15 @@ const memberSchema = new mongoose.Schema({
   removalReason: { type: String, default: '' }
 });
 
+memberSchema.pre('save', async function(next) {
+  if (this.isNew) {
+    const lastMember = await mongoose.model('Member').findOne({}, {}, { sort: { 'memberNumber': -1 } });
+    const lastMemberNumber = lastMember ? parseInt(lastMember.memberNumber, 10) : 0;
+    this.memberNumber = (lastMemberNumber + 1).toString().padStart(5, '0');
+  }
+  next();
+});
+
 const Member = mongoose.model('Member', memberSchema);
 
 module.exports = Member;
