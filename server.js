@@ -113,6 +113,36 @@ app.delete('/members', async (req, res) => {
   }
 });
 
+// Fetch a single member endpoint
+app.get('/members/:id', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    const member = await Member.findById(req.params.id);
+    if (!member) return res.status(404).json({ message: 'Member not found' });
+    res.json(member);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update member endpoint
+app.put('/members/:id', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Unauthorized' });
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!member) return res.status(404).json({ message: 'Member not found' });
+    res.json(member);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
