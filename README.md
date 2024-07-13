@@ -19,6 +19,7 @@ Create a `.env` file in the root directory of the project and add the following 
 MONGODB_SERVER_IP=localhost
 MONGODB_DATABASE=yourDatabase
 JWT_SECRET=yourJWTSecret
+REACT_APP_HEADER_TEXT=Insert name  of the wanted membership listing here. 
 ```
 
 Replace `yourDatabase` with the name of your MongoDB database and `yourJWTSecret` with a secret key for JWT token generation.

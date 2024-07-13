@@ -2,9 +2,10 @@ import React from 'react';
 import './Header.css';
 
 const Header = () => {
+  const headerText = process.env.REACT_APP_HEADER_TEXT || 'Uppdatera med föreningens namn';
   return (
-    <header className="header">
-      <h2>Föreningen Idol-Göran & Maria's Vänner</h2>
+    <header className="app-header">
+      <h1>{headerText}</h1>
     </header>
   );
 };

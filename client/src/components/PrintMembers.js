@@ -55,6 +55,7 @@ const PrintMembers = () => {
         ))}
       </ul>
       <button onClick={() => window.print()}>Print</button>
+      <button type="button" onClick={() => navigate('/members')}>Cancel</button>
     </div>
   );
 };
