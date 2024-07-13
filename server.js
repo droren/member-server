@@ -40,27 +40,30 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Login endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
     if (!user) {
+      console.log('User not found');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Password does not match');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
+    console.error('Error during login:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // Fetch members endpoint
 app.get('/members', async (req, res) => {
