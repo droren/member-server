@@ -26,7 +26,7 @@ mongoose.connection.on('connected', async () => {
     // Add default admin user
     const adminUser = new User({
       username: 'goranadmin',
-      password: hashedPassword
+      password: 'skogsrojet2012'
     });
     await adminUser.save();
 
