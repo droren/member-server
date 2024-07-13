@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import Header from './Header';  // Import the Header component
+import Header from './Header';
 import './EditMember.css';
 
 const EditMember = () => {
+  const { id } = useParams();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -15,24 +16,28 @@ const EditMember = () => {
   const [group, setGroup] = useState('');
   const [feePaid, setFeePaid] = useState(false);
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchMember = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const member = response.data;
-      setFirstName(member.firstName);
-      setLastName(member.lastName);
-      setBirthday(new Date(member.birthday).toISOString().split('T')[0]);
-      setStreetAddress(member.streetAddress);
-      setPostalNumber(member.postalNumber);
-      setCity(member.city);
-      setPhoneNumber(member.phoneNumber);
-      setGroup(member.group);
-      setFeePaid(member.feePaid);
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const member = response.data;
+        setFirstName(member.firstName);
+        setLastName(member.lastName);
+        setBirthday(member.birthday.split('T')[0]); // Format the date
+        setStreetAddress(member.streetAddress);
+        setPostalNumber(member.postalNumber);
+        setCity(member.city);
+        setPhoneNumber(member.phoneNumber);
+        setGroup(member.group);
+        setFeePaid(member.feePaid);
+      } catch (err) {
+        console.error(err);
+        alert('Error fetching member data');
+      }
     };
 
     fetchMember();
@@ -42,7 +47,7 @@ const EditMember = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      await axios.put(`http://localhost:5500/members/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members/${id}`, {
         firstName,
         lastName,
         birthday,
@@ -64,7 +69,7 @@ const EditMember = () => {
 
   return (
     <div className="edit-member-page">
-      <Header /> {/* Include the Header component */}
+      <Header />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>First Name</label>
