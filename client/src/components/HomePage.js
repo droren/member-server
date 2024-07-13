@@ -9,7 +9,6 @@ const HomePage = () => {
       <Header /> {/* Include the Header component */}
       <div className="links">
         <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
       </div>
     </div>
   );

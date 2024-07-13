@@ -20,7 +20,7 @@ const EditMember = () => {
   useEffect(() => {
     const fetchMember = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5500/members/${id}`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const member = response.data;

@@ -9,10 +9,15 @@ const PrintMembers = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5500/members', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMembers(response.data.filter(member => !member.removed));
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setMembers(response.data);
+      } catch (err) {
+        console.error(err);
+        alert('Error fetching members');
+      }
     };
 
     fetchMembers();
