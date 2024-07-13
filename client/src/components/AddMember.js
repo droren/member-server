@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';  // Import the Header component
+import Header from './Header';
 import './AddMember.css';
 
 const AddMember = () => {
@@ -20,7 +20,7 @@ const AddMember = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      await axios.post('http://localhost:5500/members', {
+      await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/members`, {
         firstName,
         lastName,
         birthday,
@@ -42,7 +42,7 @@ const AddMember = () => {
 
   return (
     <div className="add-member-page">
-      <Header /> {/* Include the Header component */}
+      <Header />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>First Name</label>

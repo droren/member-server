@@ -1,29 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import './Login.css';
-import { getClientIP } from '../utils/getClientIP';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [clientIP, setClientIP] = useState('localhost');
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchClientIP = async () => {
-      const ip = await getClientIP();
-      setClientIP(ip);
-    };
-
-    fetchClientIP();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://${clientIP}:5500/login`, { username, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5500'}/login`, { username, password });
       localStorage.setItem('token', response.data.token);
       navigate('/members');
     } catch (err) {
