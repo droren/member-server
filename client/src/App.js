@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Login from './components/Login';
-import Register from './components/Register';
+import Register from './components/RegisterUser';
 import MemberList from './components/MemberList';
 import AddMember from './components/AddMember';
 import RemoveMember from './components/RemoveMember';
@@ -18,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterUser />} />
           <Route path="/members" element={<MemberList />} />
           <Route path="/add-member" element={<AddMember />} />
           <Route path="/remove-member" element={<RemoveMember />} />
