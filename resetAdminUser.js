@@ -20,7 +20,6 @@ mongoose.connection.on('connected', async () => {
   try {
     // Clear existing data
     await User.deleteMany({});
-    await Member.deleteMany({});
 
     // Add default admin user
     const adminUser = new User({
